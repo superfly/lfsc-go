@@ -1,0 +1,4 @@
+github.com/pierrec/lz4/v4 v4.1.17 h1:kV4Ip+/hUBC+8T6+2EgburRtkE9ef4nbY3f4dFhGjMc=
+github.com/pierrec/lz4/v4 v4.1.17/go.mod h1:gZWDp/Ze/IJXGXf23ltt2EXimqmTUXEy0GFuRQyBid4=
+github.com/superfly/ltx v0.3.12 h1:Z7z1sc4g34/jUi3XO84+zBlIsbaoh2RJ3b4zTQpBK/M=
+github.com/superfly/ltx v0.3.12/go.mod h1:ly+Dq7UVacQVEI5/b0r6j+PSNy9ibwx1yikcWAaSkhE=
