@@ -1,4 +1,6 @@
 LiteFS Cloud Go Client
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/superfly/lfsc-go)
+![GitHub](https://img.shields.io/github/license/superfly/lfsc-go)
 ======================
 
 This project is a thin wrapper for connecting to LiteFS Cloud. Most methods
