@@ -92,7 +92,7 @@ func (c *Client) DeleteCluster(ctx context.Context, name string) error {
 // A cluster-scoped authentication token with read permissions is required.
 func (c *Client) Pos(ctx context.Context) (map[string]ltx.Pos, error) {
 	output := make(map[string]ltx.Pos)
-	if err := c.do(ctx, "GET", url.URL{Path: "/pos"}, nil, output); err != nil {
+	if err := c.do(ctx, "GET", url.URL{Path: "/pos"}, nil, &output); err != nil {
 		return nil, err
 	}
 	return output, nil
@@ -102,7 +102,7 @@ func (c *Client) Pos(ctx context.Context) (map[string]ltx.Pos, error) {
 // A cluster-scoped authentication token with read permissions is required.
 func (c *Client) HWM(ctx context.Context) (map[string]ltx.TXID, error) {
 	output := make(map[string]ltx.TXID)
-	if err := c.do(ctx, "GET", url.URL{Path: "/hwm"}, nil, output); err != nil {
+	if err := c.do(ctx, "GET", url.URL{Path: "/hwm"}, nil, &output); err != nil {
 		return nil, err
 	}
 	return output, nil
@@ -133,7 +133,7 @@ func (c *Client) ExportDatabase(ctx context.Context, database string) (io.ReadCl
 	q.Set("db", database)
 	q.Set("format", "sqlite")
 
-	req, err := c.newRequest(ctx, "POST", url.URL{Path: "/db/restore", RawQuery: q.Encode()}, nil)
+	req, err := c.newRequest(ctx, "GET", url.URL{Path: "/db/snapshot", RawQuery: q.Encode()}, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +197,13 @@ func (c *Client) newRequest(ctx context.Context, method string, u url.URL, body 
 	if err != nil {
 		return nil, err
 	}
-	return req.WithContext(ctx), nil
+	req = req.WithContext(ctx)
+
+	if c.Token != "" {
+		req.Header.Set("Authorization", c.Token)
+	}
+
+	return req, nil
 }
 
 func (c *Client) do(ctx context.Context, method string, u url.URL, input, output any) error {
