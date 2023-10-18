@@ -182,6 +182,34 @@ type importDatabaseOutput struct {
 	TXID ltx.TXID `json:"txID"`
 }
 
+// Regions returns a list of available LiteFS Cloud regions.
+func (c *Client) Regions(ctx context.Context) ([]string, error) {
+	req, err := c.newRequest(ctx, "GET", url.URL{Path: "/regions"}, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := decodeResponseError(resp); err != nil {
+		_ = resp.Body.Close()
+		return nil, err
+	}
+
+	var output regionsOutput
+	if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+		return nil, fmt.Errorf("cannot parse response body (%d): %w", resp.StatusCode, err)
+	}
+	return output.Regions, nil
+}
+
+type regionsOutput struct {
+	Regions []string `json:"regions"`
+}
+
 func (c *Client) newRequest(ctx context.Context, method string, u url.URL, body io.Reader) (*http.Request, error) {
 	if c.URL == "" {
 		return nil, fmt.Errorf("lfsc.Client: URL required")
